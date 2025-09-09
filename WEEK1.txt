@@ -1,0 +1,87 @@
+Topic 1: Header Files and `using` Directive
+- English: Do not use `using` directives or declarations in header files.
+- 中文: 不要在头文件中使用 `using` 指令或声明。
+
+- English: A `using` directive pollutes the global namespace.
+- 中文: `using` 指令会污染全局命名空间。
+
+- English: In header files, always use fully qualified names like `std::string`.
+- 中文: 在头文件中，始终使用完全限定名，如 `std::string`。
+
+- English: It's safe to use `using` directives in implementation files (`.cpp`) because their scope is limited to that file.
+- 中文: 在实现文件（`.cpp`）中使用 `using` 指令是安全的，因为其作用范围仅限于该文件。
+
+Topic 2: C++ Compilation Process
+- English: **Compilation** is a multi-stage process that includes pre-processing, compiling, and linking.
+- 中文: **编译**是一个多阶段的过程，包括预处理、编译和链接。
+
+- English: The **pre-processor** handles directives like `#include` and `#define` by performing text replacement.
+- 中文: **预处理器**通过执行文本替换来处理 `#include` 和 `#define` 等指令。
+
+- English: **Compilation** transforms a `.cpp` file into an object file (`.o` or `.obj`).
+- 中文: **编译**将一个 `.cpp` 文件转换成目标文件（`.o` 或 `.obj`）。
+
+- English: The **linker** combines all object files and libraries into a single executable.
+- 中文: **链接器**将所有目标文件和库组合成一个可执行文件。
+
+- English: Good practice is to place `using` directives **after** all `#include` directives to avoid potential name collisions.
+- 中文: 好的做法是将 `using` 指令放在所有 `#include` 指令**之后**，以避免潜在的名字冲突。
+
+Topic 3: Storage Duration and `static` Variables
+- English: **Automatic variables** (without `static`) are created and re-initialized every time a function is called.
+- 中文: **自动变量**（没有 `static` 修饰）在每次函数调用时都会被创建和重新初始化。
+
+- English: **Static variables** are created and initialized only once, and their value is preserved between function calls.
+- 中文: **静态变量**只被创建和初始化一次，其值在函数调用之间会被保留。
+
+Topic 4: C++ Inheritance and Polymorphism
+- English: A **`Derived class object`** contains a **`Base class subobject`**.
+- 中文: 一个 **`派生类对象`** 包含一个 **`基类子对象`**。
+
+- English: **Static binding** (compile-time) happens when the compiler determines the function to be called based on the pointer's type.
+- 中文: **静态绑定**（编译时）是编译器根据指针类型来决定调用哪个函数。
+
+- English: **Dynamic binding** (run-time) happens for `virtual` functions, where the program determines the correct function at runtime based on the actual object type.
+- 中文: **动态绑定**（运行时）发生在 `virtual` 函数上，程序在运行时根据实际的对象类型来决定调用哪个函数。
+
+- English: **`v-table`** (virtual function table) is a lookup table that stores the addresses of virtual functions.
+- 中文: **`虚函数表` (v-table)** 是一个存储虚函数地址的查找表。
+
+- English: Each object of a class with virtual functions has a hidden **`vptr`** (virtual pointer) that points to its class's v-table.
+- 中文: 每个拥有虚函数的类的对象都有一个隐藏的 **`虚指针` (vptr)**，它指向该类对应的虚函数表。
+
+- English: The `vptr` and `v-table` mechanism is used **only** for `virtual` function calls, not for non-virtual functions.
+- 中文: `vptr` 和 `v-table` 机制**只**用于 `virtual` 函数调用，不用于非虚函数。
+
+Topic 5: Memory and Security
+- English: **Buffer overflow** is a security vulnerability where a program writes data to a buffer beyond its allocated memory, potentially overwriting a function's **return address** on the stack.
+- 中文: **缓冲区溢出**是一种安全漏洞，程序向缓冲区写入超出其分配内存的数据，可能覆盖栈上的函数**返回地址**。
+
+- English: Overwriting the return address allows an attacker to hijack a program's control flow and execute their own malicious code.
+- 中文: 覆盖返回地址允许攻击者劫持程序的控制流并执行自己的恶意代码。
+
+- English: The `strcpy` function is unsafe because it doesn't perform bounds checking. `strcpy_s` is a safer alternative that requires the destination buffer size.
+- 中文: `strcpy` 函数不安全，因为它不进行边界检查。`strcpy_s` 是一个需要目标缓冲区大小的更安全替代方案。
+
+Topic 6: Modern C++ Features
+- English: **`auto main() -> int`** is a modern C++ syntax called **trailing return type**, which allows the return type to be specified after the parameter list.
+- 中文: **`auto main() -> int`** 是一种名为**后置返回类型**的现代 C++ 语法，它允许在参数列表后指定返回类型。
+
+- English: **`decltype(expression)`** is a keyword that deduces the type of an expression at compile time without evaluating it.
+- 中文: **`decltype(表达式)`** 是一个关键字，用于在编译时推导出表达式的类型，但不执行它。
+
+- English: **`constexpr`** declares that a function or variable can be evaluated at compile time if its inputs are constant. It can also be used at run-time with non-constant inputs.
+- 中文: **`constexpr`** 声明一个函数或变量可以在其输入为常量时，在编译时被求值。它也可以在运行时与非常量输入一起使用。
+
+- English: **`static_assert(condition, message)`** is a compile-time assertion that checks a condition and produces a custom error message if the condition is false. It works with any compile-time constant expression.
+- 中文: **`static_assert(条件, 信息)`** 是一个编译时断言，用于检查一个条件并在条件为假时产生自定义错误信息。它可与任何编译时常量表达式配合使用。
+
+Topic 7: `main` Function Arguments
+- English: **`int main(int argc, char *argv[])`** allows a program to receive command-line arguments.
+- 中文: **`int main(int argc, char *argv[])`** 允许程序接收命令行参数。
+
+- English: **`argc`** is the count of arguments, including the program's name.
+- 中文: **`argc`** 是参数的数量，包括程序名。
+
+- English: **`argv`** is an array of C-style strings, where `argv[0]` is the program's name and `argv[1]` is the first argument.
+- 中文: **`argv`** 是一个 C 风格的字符串数组，其中 `argv[0]` 是程序名，`argv[1]` 是第一个参数。
