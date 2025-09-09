@@ -1,4 +1,4 @@
-video 22:57 https://teams.microsoft.com/v2/
+video 22:57   https://teams.microsoft.com/v2/
 
 # OOP345_Week2_CppTypesClasses
 > Object-Oriented Programming (OOP345) - Week 2: C++ Types, Classes and Enumerations  
