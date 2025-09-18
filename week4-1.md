@@ -64,8 +64,11 @@
 - 示例 | Example
   - 字面量，如 `10`, `3.14`, `"hello"` (字符串字面量是 lvalue)。
   - 函数返回非引用类型的值，如 `int func() { return 10; }` 中的 `10`。
+  - `nullptr` (空指针常量)。
 - 💡实践提示 | Practice Tips
   - prvalue 通常是临时值，在表达式求值后立即销毁。
+  - **总结**：`nullptr` 是 C++11 引入的空指针常量，它是一个纯右值 (prvalue)，可以隐式转换为任何指针类型。
+  - **Summary**: `nullptr` is a null pointer constant introduced in C++11. It is a pure rvalue and can be implicitly converted to any pointer type.
 
 ### xvalue (expiring value) | 将亡值 🟡
 - 定义 | Definition
@@ -160,6 +163,8 @@
   - `char name[] = "Jane Doe"; char* surname = &name[5]; surname[-1] = '.';` 允许负下标。
 - 💡实践提示 | Practice Tips
   - C++ 允许负下标，但必须确保元素在数组边界内。
+  - **总结**：下标运算符 (`[]`) 是 C++ 中用于数组元素访问的后缀运算符。它以一个指针作为左操作数，一个整数作为右操作数，返回一个可修改的左值 (lvalue)，表示数组中指定偏移量的元素。
+  - **Summary**: The subscripting operator (`[]`) is a postfix operator in C++ used for array element access. It takes a pointer as its left operand and an integer as its right operand, returning a modifiable lvalue that represents the element at the specified offset in the array.
 
 ### Member Selection `.` and `->` | 成员选择 `.` 和 `->` 🟢
 - 定义 | Definition
@@ -377,6 +382,8 @@
   - `throw "divide by zero inadmissible";`
 - 💡实践提示 | Practice Tips
   - 用于在程序中抛出异常，通常与 `try-catch` 块一起使用。
+  - **总结**：当 `throw` 表达式被执行时，会创建一个异常对象。这个异常对象是一个左值 (lvalue)，意味着它可以被取地址，并且它的类型与 `throw` 表达式的操作数类型相同。为了捕获并处理异常，需要使用 `try-catch` 块。
+  - **Summary**: When a `throw` expression is executed, an exception object is created. This exception object is an lvalue, meaning it can be addressed, and its type is the same as the type of the operand of the `throw` expression. To catch and handle exceptions, a `try-catch` block is required.
 
 ### Binary Expressions | 二元表达式 🟡
 - 定义 | Definition
@@ -442,6 +449,8 @@
 - 💡实践提示 | Practice Tips
   - **短路求值 (Short-circuit evaluation)**: 逻辑表达式从左到右求值。如果左操作数已经确定了结果，则右操作数不会被求值。例如，`false && expr` 不会求值 `expr`。
   - **求值顺序很重要 (Order Matters)**: 利用短路求值特性，可以编写更安全的条件判断，例如 `if (nullptr != a && 6 == a[i])`。
+  - **总结**：在涉及指针的条件判断中，务必将空指针检查 (`nullptr != ptr`) 放在逻辑与 (`&&`) 的左侧，以利用短路求值机制，避免在指针为空时解引用，从而防止程序崩溃。
+  - **Summary**: In conditional statements involving pointers, always place the null pointer check (`nullptr != ptr`) on the left side of the logical AND (`&&`) operator. This utilizes short-circuit evaluation to prevent dereferencing a null pointer, thereby avoiding program crashes.
 
 ### Assignment Expressions | 赋值表达式 🟢
 - 定义 | Definition
@@ -453,6 +462,8 @@
 - 💡实践提示 | Practice Tips
   - 赋值可以级联，例如 `i = j = k = 3;`。
   - 对于封装了数组的类类型，简单赋值可以复制所有元素。
+  - **总结**：当结构体或类中包含固定大小的数组（而非指针）时，默认的赋值操作符会执行“成员逐个复制”(member-wise copy)。这意味着数组的每个元素都会被复制，而不是仅仅复制数组的地址（这与浅拷贝不同）。这种复制是安全的，因为它为数组数据创建了独立的副本，避免了指针共享问题。
+  - **Summary**: When a struct or class contains a fixed-size array (not a pointer), the default assignment operator performs "member-wise copy". This means that each element of the array is copied, rather than just copying the array's address (which is different from shallow copy). This copy is safe because it creates independent copies of the array data, avoiding pointer sharing issues.
 
 ### Sequential Expressions `,` | 顺序表达式 `,` 🟡
 - 定义 | Definition
@@ -473,6 +484,8 @@
   - **无符号陷阱 (The Unsigned Trap)**: 如果一个操作数是无符号整数类型，另一个是有符号整数类型，有符号类型的值会被提升为无符号类型，这可能导致反直觉的结果，例如 `(len > -1)` 对于 `unsigned len = 0u;` 会求值为 `false`。
   - **避免隐式提升 (Avoid Implicit Promotions)**: 隐式提升不一定可移植，最好显式地进行类型转换。
   - **细分复杂二元表达式 (Sub-Divide Complex Binary Expressions)**: 复杂二元表达式的求值顺序可能依赖于实现，细分可以确保结果一致性。
+  - **`void*` 指针转换规则总结**：当操作涉及 `void*` (通用指针) 和其他具体类型的指针时，编译器会将非 `void*` 指针隐式转换为 `void*` 以确保类型兼容性。但 `void*` 不能隐式转换回具体类型指针，需要显式类型转换。这种机制使得 `void*` 可以作为通用接口使用，例如在内存管理函数 (`malloc`, `free`) 中。
+  - **Summary of `void*` Pointer Conversion Rules**: When an operation involves both a `void*` (generic pointer) and another specific type of pointer, the compiler implicitly converts the non-`void*` pointer to `void*` to ensure type compatibility. However, `void*` cannot be implicitly converted back to a specific type pointer; explicit type casting is required. This mechanism allows `void*` to be used as a generic interface, for example, in memory management functions (`malloc`, `free`).
 
 ### Ternary Expression `?:` | 三元表达式 `?:` 🟢
 - 定义 | Definition
@@ -483,6 +496,8 @@
 - 💡实践提示 | Practice Tips
   - 提供了一种避免多个 `return` 语句的简洁方法。
   - 由于条件运算符优先级较低，在其他表达式中使用时通常需要用括号括起来。
+  - **总结**：如果三元运算符的第二个或第三个操作数不是主要表达式（例如函数调用、带副作用的表达式），编译器会在运行时生成代码，根据条件表达式的真假值，**只评估被选中的那个复杂表达式**。这是一种惰性求值机制，可以避免不必要的计算和副作用。
+  - **Summary**: If the second or third operands of the ternary operator are not primary expressions (e.g., function calls, expressions with side effects), the compiler introduces runtime code to **evaluate only the selected complex expression** based on the truth value of the conditional expression. This is a lazy evaluation mechanism that avoids unnecessary computations and side effects.
 
 ## 4. FAQ (常见问题)
 
@@ -497,6 +512,14 @@
 - **Q: 什么是运算符的优先级和结合性？**
   - **A:** **优先级 (Precedence)** 决定了在没有括号的情况下，哪个运算符在表达式中先被求值（例如乘法高于加法）。**结合性 (Associativity)** 决定了当多个相同优先级的运算符出现在表达式中时，它们的求值顺序（例如左结合或右结合）。
   - **A:** **Precedence** determines which operator is evaluated first in an expression without parentheses (e.g., multiplication over addition). **Associativity** determines the order of evaluation when multiple operators of the same precedence appear in an expression (e.g., left-to-right or right-to-left).
+
+- **Q: 为什么 `std::cout` 输出逻辑表达式结果是 `1` 或 `0` 而不是 `true` 或 `false`？**
+  - **A:** C++ 中的逻辑运算符返回 `bool` 类型的值 (`true` 或 `false`)。然而，`std::cout` 默认将 `bool` 值以整数形式输出 (`true` 为 `1`，`false` 为 `0`)。若要输出文字形式的 `true` 或 `false`，需要使用 `std::boolalpha`。
+  - **A:** Logical operators in C++ return `bool` type values (`true` or `false`). However, `std::cout` by default outputs `bool` values as integers (`1` for `true`, `0` for `false`). To output the textual form of `true` or `false`, `std::boolalpha` must be used.
+
+- **Q: 为什么可以将右值放在比较操作符的左侧？**
+  - **A:** 比较操作符 (`==`, `!=`, `<`, `>`, `<=`, `>=`) 比较的是操作数的值，而不是其内存位置。因此，它们可以接受任何值类别（包括右值）作为其操作数，无论左右。只有赋值操作符和取地址操作符等少数操作符才要求左操作数必须是左值。
+  - **A:** Comparison operators (`==`, `!=`, `<`, `>`, `<=`, `>=`) compare the values of their operands, not their memory locations. Therefore, they can accept operands of any value category (including rvalues) on either side. Only a few operators, such as assignment and address-of operators, require the left operand to be an lvalue.
 
 ## 5. 实践示例 (Practice Examples)
 
