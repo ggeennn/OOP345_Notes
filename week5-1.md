@@ -1,10 +1,10 @@
 # OOP345 Week5-1: Functions | OOP345 第5周-1: 函数
 
-更新日期：2025-09-21  
-版本号：v1.0  
+更新日期：2025-09-22  
+版本号：v1.2  
 更新内容：  
-- 基于网页https://advoop.sdds.ca/D-Processing/functions全部内容整理为双语笔记 | Organized from full webpage content into bilingual notes  
-- 包括所有代码示例、输出和解释 | Including all code examples, outputs, and explanations  
+- 添加函数指针语法总结（基于用户总结） | Added function pointer syntax summary  
+- 整合到函数指针节，确保中英对照一致 | Integrated into Function Pointer section, maintaining bilingual consistency  
 
 ## 概述 (Overview) 📌
 本章描述C++对函数类型的支持，包括跨模块的函数链接、递归、函数指针、函数对象和lambda表达式。 | This chapter describes C++ support for function types, covering function linkage across modules, recursion, pointers to functions, function objects, and lambda expressions.  
@@ -27,31 +27,32 @@
     ├── 直接进阶 (Direct): STL Algorithms using lambdas/functors | STL Algorithms with lambdas/functors
     └── 扩展学习 (Extended): std::function and Bind (函数包装和绑定) | std::function and std::bind
 ```
-学习路径：1. 基础语法 (Basic Syntax) 🟢 → 2. 链接 (Linkage) 🟢 → 3. 递归 (Recursion) 🟡 → 4. 函数指针 (Function Pointers) 🟡 → 5. 函数对象 (Function Objects) 🔴 → 6. Lambda表达式 (Lambdas) 🔴  
-| Learning Path: 1. Basic Syntax 🟢 → 2. Linkage 🟢 → 3. Recursion 🟡 → 4. Function Pointers 🟡 → 5. Function Objects 🔴 → 6. Lambda Expressions 🔴  
+学习路径：1. 函数语法 (Function Syntax) 🟢 → 2. 链接 (Linkage) 🟢 → 3. 递归 (Recursion) 🟡 → 4. 函数指针 (Function Pointers) 🟡 → 5. 函数对象 (Function Objects) 🔴 → 6. Lambda表达式 (Lambdas) 🔴  
+| Learning Path: 1. Function Syntax 🟢 → 2. Linkage 🟢 → 3. Recursion 🟡 → 4. Function Pointers 🟡 → 5. Function Objects 🔴 → 6. Lambda Expressions 🔴  
 
 ## 目录 (Table of Contents) 📑
-- [Functions Overview (函数概述)](#functions-overview)
-- [Function Syntax (函数语法)](#function-syntax)
-  - [Trailing Return-Type Declaration (尾随返回类型声明)](#trailing-return-type-declaration)
-    - [Enumeration defined within a class (类内定义的枚举)](#enumeration-defined-within-a-class)
-    - [Templated Functions (模板函数)](#templated-functions)
-- [Linkage (链接)](#linkage)
-- [Recursion (递归)](#recursion)
-  - [Stack Space Alternative (栈空间替代)](#stack-space-alternative)
-- [Function Pointer (函数指针)](#function-pointer)
-  - [Arrays of Pointers to Functions (函数指针数组)](#arrays-of-pointers-to-functions)
-- [Function Objects (函数对象)](#function-objects)
-- [Lambda Expressions (Lambda表达式)](#lambda-expressions)
-  - [Capture List (捕获列表)](#capture-list)
-    - [Empty List (空列表)](#empty-list)
-    - [Capture by Value (按值捕获)](#capture-by-value)
-    - [Capture by Reference (按引用捕获)](#capture-by-reference)
-    - [Exceptions to Capture Defaults (捕获默认的例外)](#exceptions-to-capture-defaults)
-- [Exercises (练习)](#exercises)
-- [FAQ (常见问题)](#faq)
-- [实践示例 (Practice Examples)](#practice-examples)
-- [学习建议 (Study Tips)](#study-tips)
+- [函数概述 (Functions Overview)](#函数概述-functions-overview)
+- [函数语法 (Function Syntax)](#函数语法-function-syntax)
+  - [尾随返回类型声明 (Trailing Return-Type Declaration)](#尾随返回类型声明-trailing-return-type-declaration)
+    - [类内定义的枚举 (Enumeration defined within a class)](#类内定义的枚举-enumeration-defined-within-a-class)
+    - [模板函数 (Templated Functions)](#模板函数-templated-functions)
+- [链接 (Linkage)](#链接-linkage)
+- [递归 (Recursion)](#递归-recursion)
+  - [栈空间替代 (Stack Space Alternative)](#栈空间替代-stack-space-alternative)
+- [函数指针 (Function Pointer)](#函数指针-function-pointer)
+  - [函数指针数组 (Arrays of Pointers to Functions)](#函数指针数组-arrays-of-pointers-to-functions)
+  - [函数指针语法总结 (Function Pointer Syntax Summary)](#函数指针语法总结-function-pointer-syntax-summary)
+- [函数对象 (Function Objects)](#函数对象-function-objects)
+- [Lambda表达式 (Lambda Expressions)](#lambda表达式-lambda-expressions)
+  - [捕获列表 (Capture List)](#捕获列表-capture-list)
+    - [空列表 (Empty List)](#空列表-empty-list)
+    - [按值捕获 (Capture by Value)](#按值捕获-capture-by-value)
+    - [按引用捕获 (Capture by Reference)](#按引用捕获-capture-by-reference)
+    - [捕获默认的例外 (Exceptions to Capture Defaults)](#捕获默认的例外-exceptions-to-capture-defaults)
+- [练习 (Exercises)](#练习-exercises)
+- [FAQ (常见问题)](#faq-常见问题)
+- [实践示例 (Practice Examples)](#实践示例-practice-examples)
+- [学习建议 (Study Tips)](#学习建议-study-tips)
 
 ## 知识点详解 (Detailed Content) 📚
 
@@ -59,11 +60,11 @@
 - 定义 | Definition  
   - 中文解释：面向对象语言使用函数类型表示行为，实现逻辑块。高内聚低耦合函数驻留内存，可能全局/类/函数作用域。可重载/继承/模板/嵌套，嵌套为闭包。C++支持lambda和functor。  
   - English explanation: Object-oriented languages use function types to represent behavior, implementing cohesive blocks of logic in memory with scopes. Well-designed functions have high cohesion (single task) and low coupling (minimal interfaces). Functions can be overloaded, inherited, templated, nested; nested are closures. C++ supports lambdas as closures and functors via `()` overload.  
-  - 💡实践提示 | Practice Tips: 设计函数时优先单一责任，减少依赖 | Prioritize single responsibility, minimize dependencies for cohesion/coupling.  
+- 💡实践提示 | Practice Tips: 设计函数时优先单一责任，减少依赖 | Prioritize single responsibility, minimize dependencies for cohesion/coupling.  
 
 ### 函数语法 (Function Syntax) 🟢
 - 定义 | Definition  
-  - 中文解释：C++11引入语法简化指令，如类型推断和尾随返回类型。类型推断在Fundamental Types章节介绍。 | C++11 introduced syntax for simple, least-repetitive instructions: type-inference (auto) and trailing return types. Type inference covered in Fundamental Types.  
+  - 中文解释：C++11引入语法简化指令，如类型推断和尾随返回类型。类型推断在Fundamental Types章节介绍。用于模板或类内枚举的返回类型。 | C++11 introduced syntax for simple, least-repetitive instructions: type-inference (auto) and trailing return types. Type inference covered in Fundamental Types.  
   - English explanation: C++11 syntax improvements include type-inference declaration and trailing return type declaration.  
 - 示例 | Example  
   - 实际应用场景: 用于模板或类内枚举的返回类型 | For templates or class-enum return types.  
@@ -71,8 +72,8 @@
 
 #### 尾随返回类型声明 (Trailing Return-Type Declaration) 🟢
 - 定义 | Definition  
-  - 中文解释：编译器从标识符或参数列表推断返回类型。形式: auto identifier(parameter-type-list) -> return-type; | Compiler infers return type from identifier or params. Form: auto identifier(params) -> return-type;  
-  - English explanation: A C++ compiler infers function return type from identifier or param list. Useful for class enums or templates.  
+  - 中文解释：编译器从标识符或参数列表推断返回类型。形式: auto identifier(parameter-type-list) -> return-type; 特别适用于类内枚举或模板函数。 | Compiler infers return type from identifier or params. Form: auto identifier(params) -> return-type; Useful for class enums or templates.  
+  - English explanation: A C++ compiler infers function return type from identifier or param list.  
 - 示例 | Example  
   - 实际应用场景: 类内枚举返回 | Class-internal enum returns.  
   > 原文：A return-type inference takes the form auto identifier(parameter-type-list) -> return-type;  
@@ -133,19 +134,23 @@ int main()  // 主函数 | Main
     std::cout << b.get() << std::endl;  // 输出儿童票 | Output child
 }  // 预期输出: Adult Ticket Child Ticket | Expected: Adult Ticket\nChild Ticket
 ```
-- 💡实践提示 | Practice Tips: 避免 scoping 类名在返回中 | Avoid class scoping in returns for simplicity.  
+- 💡实践提示 | Practice Tips: 避免 scoping 类名在返回中；类访问顺序惯例：public 先 (接口清晰)，private 后 (数据隐藏) | Avoid class scoping in returns for simplicity. Convention: public first (interface clear), private last (hide data).  
 
 ##### 类内定义的枚举 (Enumeration defined within a class) 🟢
 - 定义 | Definition  
-  - 中文解释：编译器在定义时未知类内enum，返回需尾随声明。 | Compiler unknown of class enum at def, use trailing.  
+  - 中文解释：编译器在定义时未知类内enum，返回需尾随声明。声明类内无需 trailing（scope 知），定义类外需 auto -> 推断。参数/体受益于 Ticket:: 前缀，无需 ::。 | Compiler unknown of class enum at def, use trailing. Declaration inside no trailing (scope knows); external def needs auto ->. Params/body benefit from prefix, no :: needed.  
   - English explanation: Return type (TicketType) unknown until class context recognized.  
 - 示例 | Example: 如上Ticket::get()，无尾随需Ticket::TicketType返回 | As above, without trailing: Ticket::TicketType get().  
+  - 生活类比 | Analogy: 声明如“家菜单”知类型；定义类外如“外单”需 -> 补全。参数如“单内地址”受益前缀；返回如“单封”独立。 | Declaration "home menu" knows type; external def "external order" specifies later (->). Params "order inside" (benefit prefix); return "envelope" ahead (independent).  
+  - 常见误区 | Common Pitfalls: 以为参数总需 ::（错，有前缀省略）；忽略声明类内 vs 定义类外（类内 OK 无，类外需 auto ->）。 | Assume params always :: (wrong, prefix omits); ignore decl inside vs def outside (inside OK, outside needs auto ->).  
+- 💡实践提示 | Practice Tips: 测试删 Ticket:: 前缀——参数错“unknown TicketType”。加回 OK。 | Test remove Ticket:: prefix—param error "unknown TicketType". Add back OK.  
 
 ##### 模板函数 (Templated Functions) 🟡
 - 定义 | Definition  
-  - 中文解释：返回类型从参数列表推断，使用decltype(t + u)。 | Return from param list, decltype for expression type.  
+  - 中文解释：返回类型从参数列表推断，使用decltype(t + u)。返回未知直到参数处理完。 | Return from param list, decltype for expression type. Return unknown until params processed.  
   - English explanation: Return type known after params, use decltype for t + u type.  
 - 示例 | Example  
+  - 实际应用场景: 运算符+返回类型；排序比较函数 | For operator+ return types; sorting comparator.  
 ```cpp
 // decltype with templates | decltype与模板
 // decltype.cpp
@@ -167,11 +172,11 @@ int main()  // 主函数 | Main
     std::cout << add(i, x) << std::endl;  // 3+4.5=7.5 | 7.5
 }  // 预期输出: 9 7.5 | Expected: 9\n7.5
 ```
-- 💡实践提示 | Practice Tips: 用于运算符+返回类型 | For operator+ return types.  
+- 💡实践提示 | Practice Tips: 用于运算符+返回类型；&fn可选，隐式转换 | For operator+ return types. &fn optional, implicit.  
 
 ### 链接 (Linkage) 🟢
 - 定义 | Definition  
-  - 中文解释：外部链接可见于翻译单元外，内部(static)仅本单元。默认外部，main必须外部。 | External visible outside TU, internal (static) only in TU. Default external, main must be.  
+  - 中文解释：外部链接可见于翻译单元外，内部(static)仅本单元。默认外部，main必须外部。extern冗余。 | External visible outside TU, internal (static) only in TU. Default external, main must be. extern redundant.  
   - English explanation: External linkage visible outside translation unit (TU), internal (static) invisible outside. Default external for functions.  
 - 示例 | Example  
   - 实际应用场景: 模块间static display无冲突 | Static display in modules no conflict.  
@@ -189,7 +194,10 @@ void module_b() {  // 外部链接 | External linkage
     display();  // 调用display | Call display
 }
 
-// Module A类似，static display不同无冲突 | Similar in A, different static no conflict
+// Module A类似，static display不同无冲突 | Module A similar, different static no conflict
+// linkage_a.cpp
+// static void display() { std::cout << "in module a\n"; }
+// void module_b(); int main() { display(); module_b(); }  // Output: in module a\nin module b
 ```
   > 原文：The different definitions of display() in the two modules do not conflict. | Source: Same.  
   💡 解析步骤 | Analysis Steps:  
@@ -201,73 +209,62 @@ void module_b() {  // 外部链接 | External linkage
 
 ### 递归 (Recursion) 🟡
 - 定义 | Definition  
-  - 中文解释：函数自调用，需要退出条件终止递归，避免栈溢出。控制返回初始调用者。 | Function calls itself, needs exit condition to terminate and prevent stack overflow. Returns through call stack.  
+  - 中文解释：函数自调用，需要退出条件终止递归，避免栈溢出。控制返回初始调用者。栈空间宝贵，深递归风险。 | Function calls itself, needs exit condition to terminate and prevent stack overflow. Returns through call stack. Stack space precious, deep recursion risky.  
   - English explanation: Recursive function calls itself; requires exit condition to stop.  
 - 示例 | Example  
   - 实际应用场景: 阶乘计算 | Factorial calculation.  
 ```cpp
 // Recursive Functions | 递归函数
-// fibonacci.cpp  # Note: Code is factorial, not fib as named
+// fibonacci.cpp (adapted for factorial)
 
 #include <iostream>
 
-unsigned factorial(unsigned x)  // 无符号阶乘 | Unsigned factorial
+unsigned factorial(unsigned x)  // 递归阶乘 | Recursive factorial
 {
-    return (x > 2u) ? x * factorial(x - 1) : x;  // 递归调用，若x<=2返回x | Recur if x>2, else x
+    return (x > 2u) ? x * factorial(x - 1) : x;  // 退出: x <= 2 返回x，否则 x * fact(x-1) | Exit: x <= 2 return x, else x * fact(x-1)
 }
 
 int main()  // 主函数 | Main
 {
-    std::cout << "2! = " << factorial(2) << std::endl;  // 2! = 2 | 2
-    std::cout << "3! = " << factorial(3) << std::endl;  // 3! = 6 | 6
-    std::cout << "4! = " << factorial(4) << std::endl;  // 4! = 24 | 24
-}  // 预期输出: 2! = 2 等 | Expected: 2! = 2\n3! = 6\n4! = 24
+    std::cout << "2! = " << factorial(2) << std::endl;  // 2
+    std::cout << "3! = " << factorial(3) << std::endl;  // 6
+    std::cout << "4! = " << factorial(4) << std::endl;  // 24
+}  // 预期输出: 2! = 2 3! = 6 4! = 24 | Expected: 2! = 2\n3! = 6\n4! = 24
 ```
-概念关系图：递归栈  
-```mermaid
-graph TD
-    A[main calls factorial(4)] --> B[factorial(4): 4 > 2? Yes, call factorial(3)]
-    B --> C[factorial(3): 3 > 2? Yes, call factorial(2)]
-    C --> D[factorial(2): 2 <= 2, return 2]
-    D --> E[C: 3 * 2 = 6, return 6]
-    E --> F[B: 4 * 6 = 24, return 24]
-    F --> G[main receives 24]
-    style D fill:#90EE90  // 基例 | Base case
-```
-- 💡实践提示 | Practice Tips: 监控栈深度，避免无限递归 | Monitor stack depth, avoid infinite recursion.  
+- 💡实践提示 | Practice Tips: 确保退出条件；深度<1000，避免溢出 | Ensure exit condition; depth <1000, avoid overflow.  
 
 #### 栈空间替代 (Stack Space Alternative) 🟡
 - 定义 | Definition  
-  - 中文解释：递归消耗栈，替代用迭代循环高效。 | Recursion uses stack; iteration alternative efficient.  
-  - English explanation: Stack precious; use iteration loop instead.  
+  - 中文解释：迭代替代高递归逻辑，避免栈消耗。while循环计数。 | Iteration alternative to recursive logic, avoids stack use. While loop for counting.  
+  - English explanation: Iteration construct (while) replaces recursion, efficient no stack.  
 - 示例 | Example  
 ```cpp
-// Iteration for factorial | 迭代阶乘
+// Iterative Functions | 迭代函数
 // iteration.cpp
 
 #include <iostream>
 
-unsigned factorial(unsigned x)  // 迭代版本 | Iterative version
+unsigned factorial(unsigned x)  // 迭代阶乘 | Iterative factorial
 {
-    unsigned result = 1u;  // 初始化结果 | Init result
-    while (x > 1u)  // 循环直到x<=1 | Loop while x>1
-        result = result * x--;  // result *= x, x-- | Multiply and decrement
-    return result;  // 返回 | Return
+    unsigned result = 1u;  // 结果初始化 | Result init
+    while (x > 1u)  // 循环直到x <=1 | Loop while x >1
+        result = result * x--;  // 累乘并递减 | Multiply and decrement
+    return result;  // 返回结果 | Return result
 }
 
-int main()  // 主 | Main
+int main()  // 主函数 | Main
 {
     std::cout << "2! = " << factorial(2) << std::endl;  // 2
     std::cout << "3! = " << factorial(3) << std::endl;  // 6
     std::cout << "4! = " << factorial(4) << std::endl;  // 24
-}  // 同递归输出 | Same output as recursion
+}  // 预期输出同递归 | Expected same as recursion
 ```
-- 💡实践提示 | Practice Tips: 优先迭代节省栈 | Prefer iteration for stack savings.  
+- 💡实践提示 | Practice Tips: 优先迭代高效；递归优雅但栈风险 | Prefer iteration efficient; recursion elegant but stack risk. 常见误区: 无退出=栈溢出 | Common error: No exit=overflow. 调试: 打印调用栈 | Debug: Print stack.  
 
 ### 函数指针 (Function Pointer) 🟡
 - 定义 | Definition  
-  - 中文解释：函数驻内存，可地址化。指针持函数地址，语法: return-type (*identifier)(params) [= fn]; 括号区分指针。 | Functions addressable in memory. Pointer holds address: return (*id)(params) [= fn]; Parens for pointer vs function.  
-  - English explanation: Function pointers store function addresses for execution transfer.  
+  - 中文解释：函数驻留内存，可地址化。指针持函数地址，转控执行。形式: return-type (*identifier)(params) = fn; &fn可选（隐式）。 | Functions in memory, addressable. Pointer holds address, transfers control. Form: return (*id)(params) = fn; & optional (implicit).  
+  - English explanation: Function pointer holds address of function type; same sig.  
 - 示例 | Example  
   - 实际应用场景: 排序比较函数 | Sorting comparator.  
 ```cpp
@@ -276,17 +273,20 @@ int main()  // 主 | Main
 
 #include <iostream>
 
-template <typename T>  // 模板 | Template
-bool ascending(T a, T b) { return a > b; }  // 升序: a > b? | Asc: a > b
+// 升序比较 | Ascending comparison
+template <typename T>  
+bool ascending(T a, T b) { return a > b; }  // a > b 返回true交换 | Return true to swap
 
+// 降序比较 | Descending comparison
 template <typename T>
-bool descending(T a, T b) { return a < b; }  // 降序: a < b? | Desc: a < b
+bool descending(T a, T b) { return a < b; }  // a < b 返回true交换 | Return true to swap
 
+// 冒泡排序 | Bubble sort
 template <typename T>
-void sort(T* a, int n, bool (*comp)(T, T))  // comp为函数指针 | comp function ptr
+void sort(T* a, int n, bool (*comp)(T, T))  // comp函数指针 | comp function ptr
 {
-    for (int i = n - 1; i > 0; i--)  // 冒泡排序外循环 | Bubble outer
-        for (int j = 0; j < i; j++)  // 内循环 | Inner
+    for (int i = n - 1; i > 0; i--)  // 外循环 | Outer loop
+        for (int j = 0; j < i; j++)  // 内循环 | Inner loop
             if (comp(a[j], a[j+1]))  // 用comp比较 | Use comp
             {
                 T temp = a[j];  // 交换 | Swap
@@ -303,23 +303,23 @@ void display(T* a, int n)  // 显示数组 | Display array
     std::cout << std::endl;
 }
 
-int main()  // 主 | Main
+int main()  // 主函数 | Main
 {
     int a[] = {1, 5, 2, 3, 6, 7, 2};  // 测试数组 | Test array
     int n = sizeof a / sizeof (int);  // 长度 | Size
 
-    sort(a, n, ascending<int>);  // 升序排序，指定<int> | Asc sort, <int>
-    display(a, n);  // 1 2 2 3 5 6 7 | Output
+    sort(a, n, ascending<int>);  // 升序，指定<int> | Asc sort, specify <int>
+    display(a, n);  // 1 2 2 3 5 6 7 | Output asc
 
-    sort(a, n, descending<int>);  // 降序 | Desc
-    display(a, n);  // 7 6 5 3 2 2 1 | Output
-}  // 预期: 升序然后降序 | Expected asc then desc
+    sort(a, n, descending<int>);  // 降序 | Desc sort
+    display(a, n);  // 7 6 5 3 2 2 1 | Output desc
+}  // 预期: 升序然后降序 | Expected: asc then desc
 ```
-- 💡实践提示 | Practice Tips: &fn可选，隐式转换 | &fn optional, implicit.  
+- 💡实践提示 | Practice Tips: 更改: ptr = new_fn; 用于函数表选择 | Change: ptr = new_fn. For menu of functions.  
 
 #### 函数指针数组 (Arrays of Pointers to Functions) 🟡
 - 定义 | Definition  
-  - 中文解释：同返回/参数的函数地址存数组。形式: return (*id[n])(params) = {fn1, fn2}; | Array for same sig functions: return (*id[n])(params) = {...}.  
+  - 中文解释：同返回/参数的函数地址存数组。形式: return (*id[n])(params) = {fn1, fn2}; 无需类型特化若指定int。 | Array for same sig functions: return (*id[n])(params) = {...}. No specialization if int specified.  
   - English explanation: Array holds pointers to functions with same sig.  
 - 示例 | Example  
 ```cpp
@@ -330,7 +330,7 @@ int main()  // 主 | Main
 
 // sort and display as above | 如上
 
-int main()  // 主 | Main
+int main()  // 主函数 | Main
 {
     int a[] = {1, 5, 2, 3, 6, 7, 2};  // 数组 | Array
     bool (*criterion[2])(int, int) = {ascending, descending};  // 数组初始化，无需<int>因指定int | Init array, no <int> as int specified
@@ -340,10 +340,67 @@ int main()  // 主 | Main
     {
         sort(a, n, criterion[i]);  // 用数组元素 | Use array elem
         display(a, n);  // 输出 | Output
-    }  // 同上输出 | Same outputs
-}
+    }  // 同上输出: 1 2 2 3 5 6 7 \n7 6 5 3 2 2 1 | Same as above
+}  
 ```
-- 💡实践提示 | Practice Tips: 用于函数表选择 | For menu of functions.  
+- 💡实践提示 | Practice Tips: 用于函数表选择；边界: nullptr元素跳过 | For menu of functions. Skip nullptr elements.  
+
+#### 函数指针语法总结 (Function Pointer Syntax Summary) 🟡
+| 特性 | int (*ptr)(int); | typedef int(*FnPtr)(int); | using FnPtr = int(*)(int); |
+|------|------------------|----------------------------|----------------------------|
+| 创建对象 | 函数指针变量 | 函数指针类型别名 | 函数指针类型别名 |
+| 本质 | 一个变量，可以直接赋值。 | 一个类型，不能直接赋值。 | 一个类型，不能直接赋值。 |
+| 语法 | int (*ptr)(int); | typedef int(*FnPtr)(int); | using FnPtr = int(*)(int); |
+| 使用方式 | ptr = someFunc; | FnPtr myPtr = someFunc; | FnPtr myPtr = someFunc; |
+| 兼容性 | C/C++ | C/C++ | C++11 及以后 |
+| 模板支持 | 否 | 否 | 是 |
+
+1. 基础语法  
+   int (*ptr)(int);  
+
+   声明了一个名为 ptr 的函数指针变量。  
+
+   (*ptr) 表明 ptr 是一个指针。  
+
+   int 是返回值类型。  
+
+   (int) 是参数列表。  
+
+   你可以直接给这个变量赋值：ptr = myFunc;。  
+
+2. typedef  
+   typedef int(*FnPtr)(int);  
+
+   为函数指针类型创建了一个别名，名为 FnPtr。  
+
+   FnPtr 是一个类型，不是变量。  
+
+   typedef 语法绕，别名 FnPtr 夹在中间。  
+
+   不支持模板。  
+
+3. using  
+   using FnPtr = int(*)(int);  
+
+   为函数指针类型创建了一个别名，名为 FnPtr。  
+
+   FnPtr 是一个类型，不是变量。  
+
+   using 语法更直观，可读性更好。  
+
+   支持模板，使其比 typedef 更强大。例如：template <typename T> using FuncPtr = T (*)(T);。  
+
+4. 赋值  
+   函数名（如 myFunc）在表达式中会自动退化为该函数的地址。  
+
+   因此，ptr = myFunc; 等价于 ptr = &myFunc;。  
+
+5. int (*)(int) (无变量名)  
+   这是一个纯粹的函数指针类型，没有变量名。  
+
+   通常用于 decltype 或作为函数参数类型。  
+
+   例如：decltype(&myFunc) 的类型就是 int (*)(int)。  
 
 ### 函数对象 (Function Objects) 🔴
 - 定义 | Definition  
@@ -377,7 +434,7 @@ public:
 template <typename T>
 void display(T* a, int n)  // 如上 | As above
 
-int main()  // 主 | Main
+int main()  // 主函数 | Main
 {
     int a[] = {1, 5, 2, 3, 6, 7, 2};  // 数组 | Array
     int n = sizeof a / sizeof (int);
@@ -387,9 +444,9 @@ int main()  // 主 | Main
 
     sort(a, n, Compare<int>(Order::descending));  // 另一个实例 | Another instance
     display(a, n);  // 降序 | Desc
-}  // 预期同指针 | Expected same as pointers
+}  // 预期同指针: 1 2 2 3 5 6 7 \n7 6 5 3 2 2 1 | Expected same as pointers
 ```
-- 💡实践提示 | Practice Tips: 用于需状态的多次调用 | For repeated calls needing state.  
+- 💡实践提示 | Practice Tips: 用于需状态的多次调用；通过构造函数参数到成员存储状态 | For repeated calls needing state. Store state via ctor to members.  
 
 ### Lambda表达式 (Lambda Expressions) 🔴
 - 定义 | Definition  
@@ -397,10 +454,11 @@ int main()  // 主 | Main
   - English explanation: Shorthand for local functor, captures vars, closure with env.  
 - 示例 | Example  
   - 实际应用场景: 简单局部逻辑 | Simple local logic.  
+- 💡实践提示 | Practice Tips: 短lambda行内；引用捕获避免拷贝大对象 | Inline short lambdas. Ref capture no copy for large objs.  
 
 #### 捕获列表 (Capture List) 🔴
 - 定义 | Definition  
-  - 中文解释：传递非局部变量到body。 | Pass non-locals to body.  
+  - 中文解释：传递非局部变量到body。形式: [capture-list](params) -> return {body} | Pass non-locals to body.  
 
 ##### 空列表 (Empty List) 🔴
 - 定义 | Definition  
@@ -413,7 +471,7 @@ int main()  // 主 | Main
 
 #include <iostream>
 
-int main()  // 主 | Main
+int main()  // 主函数 | Main
 {
     auto hello = []() { return "Hello World"; };  // 空lambda | Empty lambda
     auto add4  = [](int i) { return i + 4; };  // 参数i | Param i
@@ -422,9 +480,9 @@ int main()  // 主 | Main
     std::cout << hello()  << std::endl;  // Hello World
     std::cout << add4(10) << std::endl;  // 14
     std::cout << sub4(10) << std::endl;  // 6
-}  // 预期输出如上 | Expected as above
+}  // 预期输出: Hello World 14 6 | Expected: Hello World\n14\n6
 ```
-- 💡实践提示 | Practice Tips: 用于无状态简单函数 | For stateless simple funcs.  
+- 💡实践提示 | Practice Tips: 用于无状态简单函数；多参数边界 | For stateless simple funcs. Multi-params edge.  
 
 ##### 按值捕获 (Capture by Value) 🔴
 - 定义 | Definition  
@@ -449,7 +507,7 @@ int sub(int i, Func func)
     return func(i);
 }
 
-int main()  // 主 | Main
+int main()  // 主函数 | Main
 {
     int k = 4;  // 非局部k | Non-local k
     std::cout << add(10, [=](int i){ return i + k; }) << std::endl;  // [=]捕获k值，14 | [=] capture k value, 14
@@ -475,7 +533,7 @@ int add(int i, Func func) { return func(i); }  // 如上 | As above
 template<typename Func>
 int sub(int i, Func func) { return func(i); }
 
-int main()  // 主 | Main
+int main()  // 主函数 | Main
 {
     int k = 4;  // k=4
     std::cout << add(10, [&](int i){ return i + k++; }) << std::endl;  // [&]k++, 14, k=5
@@ -485,7 +543,7 @@ int main()  // 主 | Main
     std::cout << "k = " << k << std::endl;  // k=6
 }  // 预期: 14 k=5 5 k=6 | Expected: 14\nk = 5\n5\nk = 6
 ```
-- 💡实践提示 | Practice Tips: 谨慎修改，追踪副作用 | Careful mods, track side effects.  
+- 💡实践提示 | Practice Tips: 谨慎修改，追踪副作用；输出捕获值调试 | Careful mods, track side effects. Print captured for debug.  
 
 ##### 捕获默认的例外 (Exceptions to Capture Defaults) 🔴
 - 定义 | Definition  
@@ -493,7 +551,11 @@ int main()  // 主 | Main
   - English explanation: Exceptions like [=,&x], [this]; mutable for modifying value captures.  
 - 示例 | Example  
   形式示例: [=,&x,&y](...) 或 mutable [=](...) { k++; } | Form ex: mutable [=] { modify copy }.  
-- 💡实践提示 | Practice Tips: 指定捕获最小化拷贝/修改 | Specify minimal captures for efficiency.  
+- 💡实践提示 | Practice Tips: 指定捕获最小化拷贝/修改；常见错误: 捕获未用变量编译错 | Specify minimal captures for efficiency. Common error: Unused capture compile error.  
+
+## 练习 (Exercises) 📝
+- 阅读Wikipedia函数数学概念、副作用 | Read Wikipedia on mathematical functions and side effects.  
+- 观看Herb Sutter的Lambda Functions视频 | Watch Herb Sutter's Lambda Functions video (https://vimeo.com/23975522).  
 
 ## FAQ (常见问题) ❓
 - 什么是闭包 (What is a closure)?  
@@ -511,7 +573,7 @@ int main()  // 主 | Main
 
 ## 实践示例 (Practice Examples) 💻
 1. 尾随返回验证 (Trailing Return Verification) 🟢  
-   - 最小可运行示例 | Minimal: auto_return.cpp 如上  
+   - 最小可运行示例 | Minimal: auto_return.cpp (Ticket) 如上  
    - 关键特性演示 | Key: 推断类内enum返回 | Infer class enum return  
    - 边界条件测试 | Edge: 无票default | Default no ticket  
    - 预期输出 | Expected: Adult Ticket\nChild Ticket  
@@ -528,7 +590,7 @@ int main()  // 主 | Main
    - 步骤: 验证static无冲突 | Verify no conflict.  
 
 4. 递归阶乘 (Recursive Factorial) 🟡  
-   - 如fibonacci.cpp (rename to factorial) | As above  
+   - 如fibonacci.cpp (factorial) | As above  
    - 预期: 2! = 2 等 | Factorials  
    - 步骤: 测试n=0/1边界 (修改: x==0 return 1) | Test n=0/1 (mod: x==0 return 1)  
    - 常见错误 | Common Error: 无退出=栈溢出 | No exit=overflow  
@@ -598,9 +660,4 @@ int main()  // 主 | Main
 ├── 进阶内容 (Advanced)
 │   ├── 递归/指针 (Recursion/Pointers): 自调用/地址
 │   └── 对象/Lambda (Objects/Lambdas): 状态/捕获
-└── 应用 (Application): 高内聚低耦合OOP行为 | High cohesion low coupling OOP behavior
-```
-
-TODO: 补充更多边界测试 | Add more edge tests  
-NOTE: 遵循C++11+标准 | Follow C++11+ std  
-FIXME: 如果有未覆盖网页部分，添加 | If missed page part, add
+└── 应用 (Application):
