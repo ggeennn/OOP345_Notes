@@ -13,6 +13,73 @@
 - 静态函数 (Static Functions)
 - 函数指针 (Function Pointer): `return-type (*identifier)(parameter-type-list) [= fn];`
 - 函数数组指针 (Array of Function Pointers): `return-type (*identifier[n])(parameter-type-list) = { initialization-list };`
+- 函数对象 (Function Objects)
+- **Lambda 表达式 (Lambda Expressions)**
+  Lambda 表达式是 C++ 中一种创建匿名函数的语法，它允许你像创建变量一样创建可调用的对象。
+
+  ### Lambda 表达式的语法 (Lambda Expression Syntax)
+  Lambda 表达式的完整语法是：
+  ```cpp
+  [capture-list](parameter-declaration-clause) -> optional-return-type { function body }
+  ```
+  - `[capture-list]`：**捕获列表**，用于从外部作用域捕获变量。
+  - `(...)`：**参数列表**，和普通函数一样。
+  - `-> ...`：**可选的返回类型**。
+  - `{ ... }`：**函数体**。
+
+  ### 捕获列表 (Capture List)
+  捕获列表决定了 Lambda 如何访问其外部的变量。
+  - `[]`：不捕获任何变量。
+  - `[=]`：**按值捕获**所有在 Lambda 内部使用的非局部变量。Lambda 内部持有的是这些变量的副本。
+  - `[&]`：**按引用捕获**所有在 Lambda 内部使用的非局部变量。Lambda 内部对这些变量的修改会影响外部变量。
+  - `[=, &x]`：按值捕获所有变量，但 `x` 除外，`x` 按引用捕获。
+  - `[&, y]`：按引用捕获所有变量，但 `y` 除外，`y` 按值捕获。
+  - `[x, &y]`：按值捕获 `x`，按引用捕获 `y`。
+  - `[this]`：按值捕获 `this` 指针。
+
+  ### `mutable` 关键字 (The `mutable` Keyword)
+  `mutable` 用于允许按值捕获的 Lambda 表达式修改其内部的变量副本。
+  ```cpp
+  [=]() mutable { /* ... */ }
+  ```
+
+  ### 类型推导 (Type Deduction)
+  #### `auto` 关键字 (The `auto` Keyword)
+  `auto` 用于在编译时自动推导变量的类型。
+  - 局部变量：`auto myVar = 10;`
+  - Lambda 表达式：`auto myLambda = [](){ return 1; };`
+
+  在 `auto` 泛型 Lambda 中，`auto` 也可以用于参数类型：
+  ```cpp
+  auto myLambda = [](auto x) { return x; };
+  ```
+
+  #### Lambda 返回类型推导 (Lambda Return Type Deduction)
+  - **单一 `return` 语句**：编译器可以自动推导返回类型，因此 `->` 符号是可选的。
+  - **多个 `return` 语句**：如果返回类型不一致，必须使用 `->` 显式指定返回类型。
+  - **`void` 返回**：在 C++14 之后，可以省略 `-> void`。
+
+  ### 模板与类型推导 (Templates and Type Deduction)
+  模板是 C++ 中实现泛型编程的蓝图，它们在编译时根据传入的类型实例化为具体的函数或类。
+
+  #### `template` vs `auto`
+  - `template <typename T>`：用于函数或类的模板定义，它声明了一个类型占位符 `T`。
+  - `auto`：用于局部变量或泛型 Lambda 的类型推导。
+
+  #### 模板实例化过程 (Template Instantiation Process)
+  1. **模板解析**：编译器仅检查模板语法。此时，它不生成机器码，也无法确定依赖于模板参数的类型（例如 `T + U` 的结果类型）。
+  2. **模板实例化**：当你调用一个模板时，编译器用具体的类型替换模板参数，生成一个具体的函数实例。
+  3. **代码生成**：实例化后的具体函数被编译成机器码。
+
+  #### 模板返回类型推导的矛盾 (Contradiction in Template Return Type Deduction)
+  在 C++11 中，编译器在实例化模板之前需要知道其返回类型，但返回类型又依赖于实例化时传入的参数类型，这造成了死循环。
+
+  `-> decltype(a + b)` 语法解决了这个问题，它告诉编译器：“返回类型是 `a + b` 表达式的类型”。
+
+  在 C++14 之后，编译器变得更智能，可以直接从 `return` 语句推导模板函数的返回类型，从而简化了语法。
+
+  ### 总结 (Summary)
+  Lambda 表达式是带有捕获列表的可调用对象。`auto` 和 `->` 提供了强大的类型推导功能，使得 Lambda 和模板的结合更加简洁和灵活。`template` 定义了泛型蓝图，而 Lambda 作为一种特殊的函数对象，可以完美地作为模板函数的参数，实现强大的通用编程模式。
 
 ### 函数指针语法总结 (Function Pointer Syntax Summary)
 
