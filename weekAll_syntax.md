@@ -11,6 +11,16 @@
 ## Week 5:
 - 尾随返回类型声明 (Trailing Return-Type Declaration): `auto identifier(parameter-type-list) -> return-type;`
 - 静态函数 (Static Functions)
+
+  ### 静态 vs 内联函数比较 (Static vs Inline Functions Comparison)
+
+  | 特性 (Feature) | static (文件作用域 / File Scope) | inline (函数 / Function) |
+  |----------------|----------------------------------|--------------------------|
+  | 链接性 (Linkage) | 内部链接 (Internal Linkage) | 外部链接 (External Linkage) |
+  | ODR (单一定义原则 / One Definition Rule) | 不适用。每个副本都视为一个独立的函数。 (Not applicable. Each copy is treated as an independent function.) | 适用。要求所有副本必须语义相同，且链接器只保留一个最终实现。 (Applicable. All copies must be semantically identical, and the linker keeps only one final implementation.) |
+  | 最终可执行文件 (Final Executable) | 包含多个同名函数的机器码副本。 (Contains multiple copies of machine code for the same-named function.) | 只包含一个函数的机器码实现。 (Contains only one machine code implementation of the function.) |
+  | 主要目的 (Main Purpose) | 限制作用域，避免命名冲突。 (Limits scope to avoid naming conflicts.) | 允许多重定义，同时提示编译器进行优化。 (Allows multiple definitions while hinting the compiler for optimization.) |
+
 - 函数指针 (Function Pointer): `return-type (*identifier)(parameter-type-list) [= fn];`
 - 函数数组指针 (Array of Function Pointers): `return-type (*identifier[n])(parameter-type-list) = { initialization-list };`
 - 函数对象 (Function Objects)
