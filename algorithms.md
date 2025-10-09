@@ -218,7 +218,7 @@ a = 11
 b = 20
 
 ```
-
+=========================================================== read here ===================================
 ### Operator Class Templates [​](https://advoop.sdds.ca/E-STL/algorithms\#operator-class-templates "Direct link to heading")
 
 The operator class templates define function object equivalents for most of the operators present in the core language. The templates include:
