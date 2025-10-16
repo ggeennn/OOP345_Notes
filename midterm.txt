@@ -1,0 +1,73 @@
+Midterm Programming Details, Policy, and Integrity Agreement
+Important: Please arrive on time.  
+
+
+
+The midterm consists of two parts, Part 1: programming will be done before the study break and, part2: the concept will be done after the study break.
+
+
+
+Part 1 – Concept Questions and Code Walkthroughs ~30%
+Code Walkthrough Topics:
+Variable shadowing
+Static methods and attributes
+Signature of main(): int main(int argc, char* argv[])
+References and move references
+#define statement vs typedef
+Function templates: specializing and overloading
+Concept Topics:
+Translation units
+Declaration vs definition
+extern keyword
+cv-qualifiers: const, volatile
+typedef keyword
+Scope of objects: automatic, static, dynamic
+Compile-time, run-time, and pre-processing
+lvalue, rvalue
+Literal value types: L, UL, LL, etc.
+Size of unions
+Enum types (unscoped and scoped)
+Part 2 – Programming ~70%
+Maximum Time: 90 minutes
+
+This part consists of five programming questions.
+
+1- Move semantics (Rule of Five Focus) ~33 points
+
+You will be given a function template with dynamic memory and asked to implement move semantics and ostream insertion by adding the prototypes to the class and implementing the code outside the class.
+
+2- Function Template specialization ~7 points
+
+You will be given a function template and asked to implement a specialization to handle a specific type in a different way
+
+3- Lambda Expression implementation ~7 points
+
+You will be asked to call a function which has a pointer to a function as an argument using a lambda expression capturing the neighbouring values.
+
+4- Functor Implementation ~11 points
+
+You will be asked to create a functor to be able to make stateful function calls (a function that remembers its previous calls)
+
+5- Generic Ponters and low-level memory processing ~11 points
+
+You will be asked to write a function that receives an object address in a general pointer to create a dynamic byte pattern out of the original object's pattern.
+
+
+
+
+
+Coding & Submission Requirements
+You must follow the official submission instructions provided in the YouTube video
+The video clearly demonstrates how to submit your programming answers
+
+
+❌ Restrictions
+No reference sheets or scrap paper allowed
+No smart devices (phones, smartwatches, etc.) permitted during the test
+🛠️ Marking Guidelines
+Your answer will receive a mark of zero in the following cases:
+
+If your code does not relate directly to the question
+(e.g., the question asks for a class that encapsulates an Employee, and you provide a Student; or it asks for a copy constructor, and you provide a copy assignment operator instead)
+If your code is written in an inconsistent or unreadable style
+(e.g., poor indentation, inconsistent formatting, excessive blank lines, or sloppy structure)
