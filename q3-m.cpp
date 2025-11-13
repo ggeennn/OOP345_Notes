@@ -1,3 +1,19 @@
+//core code
+std::fstream bfile('b.bin',std::ios::in|std::ios::out|std::ios::binary);
+std::ofstream tfile('t.txt');
+if(bfile){
+    bfile.seekg(0,std::ios::end);
+    size_t rsize = bfile.tellg()/sizeof(Obj);
+    size_t mid = (rsize-rsize%2)/2;
+    bfile.seekg(mid*sizeof(Obj),std::ios::beg);
+    Obj temp;
+    bfile.read(reinterpret_cast<char*>(&temp),sizeof(Obj));
+    if(tfile) tfile<<temp;
+    Obj temp2;
+    bfile.seekp(mid*sizeof(Obj),std::ios::beg);
+    bfile.write(reinterpret_cast<const char*>(&temp2),sizeof(Obj));
+}
+
 //[Includes]
 #include <fstream>
 #include <vector>
