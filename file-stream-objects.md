@@ -16,7 +16,7 @@ This chapter outlines the input-output stream class hierarchy of the C++ Standar
 
 ## Class Hierarchy [​](https://advoop.sdds.ca/E-STL/file-stream-objects\#class-hierarchy "Direct link to heading")
 
-The input-output stream class hierarchy supports streaming to and from the standard console devices, files, and string streams. The base class for this hierarchy is called `ios_base`. It defines components that are independent of the direction of the stream. The `basic_ios` class template holds the type-dependent information.
+The input-output stream class hierarchy supports streaming to and from the standard console devices, files, and string streams. The base class for this hierarchy is called `ios_base`. 
 
 ### Two Class Hierarchies [​](https://advoop.sdds.ca/E-STL/file-stream-objects\#two-class-hierarchies "Direct link to heading")
 

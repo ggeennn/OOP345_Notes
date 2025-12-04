@@ -27,6 +27,8 @@ lvalue, rvalue
 Literal value types: L, UL, LL, etc.
 Size of unions
 Enum types (unscoped and scoped)
+
+
 Part 2 – Programming ~70%
 Maximum Time: 90 minutes
 
