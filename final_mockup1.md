@@ -387,6 +387,7 @@ public:
             if (i >= m_data.size()) break;
             // Check smart pointer validity
             if (m_data[i].isValid()) {
+                
                 // Dereference and store the underlying int
                 results.push_back(*m_data[i]);
             }
