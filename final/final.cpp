@@ -86,3 +86,7 @@ std::for_each(std::execution::par,validPtr.begin(),validPtr.end(),[&](dataPtr pt
     file.write(reinterpret_cast<const char>(&data),sizeof(data)); //错误//<const char*>
 });
 
+
+
+//=======================================================
+
